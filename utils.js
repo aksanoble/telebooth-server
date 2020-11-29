@@ -1,19 +1,8 @@
-const fetch = require("node-fetch");
 require("dotenv").config();
+const { GraphQLClient } = require("graphql-request");
 
-async function fetchGraphQL(operationsDoc, operationName, variables) {
-  const result = await fetch(process.env.GRAPHQL_ENDPOINT, {
-    method: "POST",
-    body: JSON.stringify({
-      query: operationsDoc,
-      variables: variables,
-      operationName: operationName,
-    }),
-  });
-
-  return await result.json();
-}
+const fetchGQL = new GraphQLClient(process.env.GRAPHQL_ENDPOINT);
 
 module.exports = {
-  fetchGraphQL,
+  fetchGQL,
 };
