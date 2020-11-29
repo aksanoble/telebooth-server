@@ -1,10 +1,6 @@
 const { Telegraf } = require('telegraf')
 const express = require('express')
 const expressApp = express()
-const Extra = require('telegraf/extra')
-const Markup = require('telegraf/markup')
-
-// 
 
 require('dotenv').config();
 
@@ -12,7 +8,7 @@ require('dotenv').config();
 const bot = new Telegraf(process.env.BOT_TOKEN)
 bot.start((ctx) => ctx.reply('Hello'))
 bot.help((ctx) => ctx.reply('Help message'))
-bot.on('message', (ctx) => ctx.telegram.sendCopy(ctx.chat.id, ctx.message, Extra.markup(keyboard)))
+bot.on('message', (ctx) => ctx.telegram.sendCopy(ctx.chat.id, ctx.message))
 bot.action('delete', ({ deleteMessage }) => deleteMessage())
 expressApp.use(bot.webhookCallback('/secret-path'))
 bot.telegram.setWebhook(process.env.WEBHOOK_PATH)
