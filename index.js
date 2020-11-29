@@ -4,10 +4,8 @@ const expressApp = express()
 const Extra = require('telegraf/extra')
 const Markup = require('telegraf/markup')
 
-// const keyboard = Markup.inlineKeyboard([
-//   Markup.urlButton('❤️', 'http://telegraf.js.org'),
-//   Markup.callbackButton('Delete', 'delete')
-// ])
+// 
+
 require('dotenv').config();
 
 
@@ -23,6 +21,6 @@ expressApp.get('/', (req, res) => {
   res.send('Hello World!')
 })
 
-expressApp.listen(3000, () => {
+expressApp.listen(process.env.PORT || 3000, () => {
   console.log('Example app listening on port 3000!')
 })
