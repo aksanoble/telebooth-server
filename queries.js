@@ -1,9 +1,9 @@
 const { gql } = require("graphql-request");
 
 const upsertUserQuery = gql`
-  mutation UpsertUser($username: String!, $first_name: String!, $id: Int!) {
+  mutation UpsertUser($username: String!, $first_name: String!, $id: Int!, $is_bot: Boolean!) {
     insert_user(
-      objects: { id: $id, username: $username, first_name: $first_name }
+      objects: { id: $id, username: $username, first_name: $first_name, is_bot: $is_bot }
       on_conflict: { constraint: user_pkey, update_columns: username }
     ) {
       returning {

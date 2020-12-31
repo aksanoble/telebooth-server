@@ -4,6 +4,9 @@ const { upsertUserQuery, insertMessageQuery } = require("./queries");
 const { fetchGQL } = require("./utils");
 const TelegramBot = require("node-telegram-bot-api");
 const to = require("await-to-js").default;
+const getObject = require('lodash.get');
+const fetch = require('node-fetch')
+
 const app = express();
 require("dotenv").config();
 const TOKEN = process.env.BOT_TOKEN;
@@ -23,6 +26,7 @@ app.post(`/${process.env.BOT_TOKEN}/sendMessage`, async (req, res) => {
   const { chatId, text } = req.body;
   const [err, data] = await saveAndSend(chatId, text);
   if (err) {
+    console.log(err);
     res.status(500).send({ err: "Error in processing message" });
   } else {
     res.sendStatus(200);
@@ -33,6 +37,25 @@ app.listen(port, () => {
   console.log(`Express server is listening on ${port}`);
 });
 
+fetch(`${process.env.TELEGRAM_API}/bot${process.env.BOT_TOKEN}/getMe`).then((res) => {
+  if (res.status === 200) {
+    return res.json()
+  }
+}).then((result) => {
+  if (result.result) {
+    const userInfo = {
+      id: getObject(result, 'result.id'),
+      is_bot: true,
+      first_name: getObject(result, 'result.first_name'),
+      username: getObject(result, 'result.username')
+    }
+
+    fetchGQL.request(upsertUserQuery, userInfo)
+  }
+}).catch((err) => {
+  console.log(err, 'Error while posting bot inforamtion');
+})
+
 bot.setWebHook(`${url}`);
 
 bot.onText(/\/start/, async msg => {
@@ -42,6 +65,7 @@ bot.onText(/\/start/, async msg => {
     fetchGQL.request(upsertUserQuery, {
       id,
       first_name,
+      is_bot: false,
       username: username || first_name
     })
   );
