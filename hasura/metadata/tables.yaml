@@ -1,0 +1,116 @@
+- table:
+    schema: public
+    name: message
+  object_relationships:
+  - name: user
+    using:
+      foreign_key_constraint_on: user_id
+  insert_permissions:
+  - role: user
+    permission:
+      check: {}
+      columns:
+      - chat_id
+      - id
+      - read
+      - text
+      - timestamp
+      - user_id
+      backend_only: false
+  select_permissions:
+  - role: user
+    permission:
+      columns:
+      - chat_id
+      - id
+      - read
+      - text
+      - timestamp
+      - user_id
+      filter: {}
+  update_permissions:
+  - role: user
+    permission:
+      columns:
+      - chat_id
+      - id
+      - read
+      - text
+      - timestamp
+      - user_id
+      filter: {}
+      check: {}
+  delete_permissions:
+  - role: user
+    permission:
+      filter: {}
+- table:
+    schema: public
+    name: online_users
+  select_permissions:
+  - role: user
+    permission:
+      columns:
+      - created_at
+      - first_name
+      - id
+      - is_bot
+      - is_unread
+      - ts
+      - updated_at
+      - user_id
+      - username
+      filter: {}
+- table:
+    schema: public
+    name: user
+  array_relationships:
+  - name: messages
+    using:
+      foreign_key_constraint_on:
+        column: user_id
+        table:
+          schema: public
+          name: message
+  insert_permissions:
+  - role: user
+    permission:
+      check: {}
+      columns:
+      - created_at
+      - first_name
+      - id
+      - is_bot
+      - is_unread
+      - updated_at
+      - username
+      backend_only: false
+  select_permissions:
+  - role: user
+    permission:
+      columns:
+      - created_at
+      - first_name
+      - id
+      - is_bot
+      - is_unread
+      - updated_at
+      - username
+      filter: {}
+  update_permissions:
+  - role: user
+    permission:
+      columns:
+      - created_at
+      - first_name
+      - id
+      - is_bot
+      - is_unread
+      - updated_at
+      - username
+      filter: {}
+      check: {}
+  delete_permissions:
+  - role: user
+    permission:
+      filter: {}
